@@ -6,6 +6,9 @@
 int play_length = 250;  //How long to play a note.
 int rest_length = 100;  //How long to rest between notes
 
+unsigned long time_since      =    0;  //How long since last note played.
+int           time_start_demo =  250;  //Wait to start color demo
+
 int wait = 100;  //General delay value
 
 //Assign pins
@@ -31,9 +34,10 @@ const byte COLS = 6; //The are six columns
 
 Adafruit_NeoPixel strip(8, rgb_d, NEO_GRB + NEO_KHZ800);
 int brightness = 50;
-int r;
-int g;
-int b;
+int r = 0;
+int g = 0;
+int b = 0;
+int x = 0;
 
 //Assign names to the buttons
 char keys[ROWS][COLS] = {  
@@ -68,81 +72,89 @@ void setup() {
   strip.begin();  //Initisalze the RGB LEDs
   strip.show();
   strip.setBrightness(brightness);
-
-/*    for(int y = 0; y < 3; y++) {
-    for(int x = 0; x < 4; x++) {
-      if(y == 0) {
-        strip.setPixelColor(x, strip.Color(255,0,0));         //  Set pixel's color (in RAM)
-      }
-      if(y == 1) {
-        strip.setPixelColor(x, strip.Color(0,0,255));         //  Set pixel's color (in RAM)
-      }
-      if(y == 2) {
-        strip.setPixelColor(x, strip.Color(0,255,0));         //  Set pixel's color (in RAM)        
-      }
-      strip.show();               
-      delay(25);
-    }
-  } 
-  */
 }
 
 void loop() {
+  if ((millis()-time_since) > time_start_demo){
+    if (millis() % 50 == 0){
+      light_panel();
+    }
+  }
+  check_keyboard();
+
+  //Serial.println(millis()-time_since);  
+
+  /*
+  Serial.print(" X: "); Serial.print(x);
+  Serial.print(" R: "); Serial.print(r);
+  Serial.print(" G: "); Serial.print(g);
+  Serial.print(" B: "); Serial.print(b);
+  Serial.println();
+  */
+}
+
+void check_keyboard(){
   char key = keypad.getKey();
 
   //Find the value of the key press and play a note.
   if (key){
-    if (key == '1'){playNote(notes[0],  play_length, rest_length); r = 255, g =   0, b =   0;}
-    if (key == '2'){playNote(notes[1],  play_length, rest_length); r = 237, g =  36, b =   0;}
-    if (key == '3'){playNote(notes[2],  play_length, rest_length); r = 219, g =  55, b =   0;}
-    if (key == '4'){playNote(notes[3],  play_length, rest_length); r = 200, g =  72, b =   0;}
-    if (key == '5'){playNote(notes[4],  play_length, rest_length); r = 182, g =  91, b =   0;}
-    if (key == '6'){playNote(notes[5],  play_length, rest_length); r = 163, g = 109, b =   0;}
-    if (key == '7'){playNote(notes[6],  play_length, rest_length); r = 146, g = 128, b =   0;}
-    if (key == '8'){playNote(notes[7],  play_length, rest_length); r = 146, g = 146, b =   0;}
-    if (key == '9'){playNote(notes[8],  play_length, rest_length); r = 128, g = 164, b =   0;}
-    if (key == 'a'){playNote(notes[9],  play_length, rest_length); r =  91, g = 180, b =   0;}
-    if (key == 'b'){playNote(notes[10], play_length, rest_length); r =  72, g = 200, b =   0;}
-    if (key == 'c'){playNote(notes[11], play_length, rest_length); r =  54, g = 219, b =   0;}
-    if (key == 'd'){playNote(notes[12], play_length, rest_length); r =  36, g = 237, b =   0;}
-    if (key == 'e'){playNote(notes[13], play_length, rest_length); r =  18, g = 255, b =   0;}
-    if (key == 'f'){playNote(notes[14], play_length, rest_length); r =   0, g = 245, b =  18;}
-    if (key == 'g'){playNote(notes[15], play_length, rest_length); r =   0, g = 234, b =  36;}
-    if (key == 'h'){playNote(notes[16], play_length, rest_length); r =   0, g = 216, b =  55;}
-    if (key == 'i'){playNote(notes[17], play_length, rest_length); r =   0, g = 198, b =  72;}
-    if (key == 'j'){playNote(notes[18], play_length, rest_length); r =   0, g = 180, b =  91;}
-    if (key == 'k'){playNote(notes[19], play_length, rest_length); r =   0, g = 164, b = 109;}
-    if (key == 'l'){playNote(notes[20], play_length, rest_length); r =   0, g = 146, b = 128;}
-    if (key == 'm'){playNote(notes[21], play_length, rest_length); r =   0, g = 128, b = 146;}
-    if (key == 'n'){playNote(notes[22], play_length, rest_length); r =   0, g = 109, b = 163;}
-    if (key == 'o'){playNote(notes[23], play_length, rest_length); r =   0, g =  91, b = 182;}
-    if (key == 'p'){playNote(notes[24], play_length, rest_length); r =   0, g =  72, b = 200;}
-    if (key == 'q'){playNote(notes[25], play_length, rest_length); r =   0, g =  55, b = 218;}
-    if (key == 'r'){playNote(notes[26], play_length, rest_length); r =   0, g =  36, b = 236;}
-    if (key == 's'){playNote(notes[27], play_length, rest_length); r =   0, g =  18, b = 255;}
-    if (key == 't'){playNote(notes[28], play_length, rest_length); r =   0, g =   0, b = 255;}
-    for(int x = 0; x < 4; x++) {
-      strip.setPixelColor(x, strip.Color(r,g,b));  //  Set pixel's color (in RAM)        
-    }
-    strip.show();
-    Serial.print("Key: "); Serial.println(key);
+    if (key == '1'){playNote(notes[0],  play_length, rest_length); x =   0; light_panel();}
+    if (key == '2'){playNote(notes[1],  play_length, rest_length); x =  26; light_panel();}
+    if (key == '3'){playNote(notes[2],  play_length, rest_length); x =  53; light_panel();}
+    if (key == '4'){playNote(notes[3],  play_length, rest_length); x =  79; light_panel();}
+    if (key == '5'){playNote(notes[4],  play_length, rest_length); x = 106; light_panel();}
+    if (key == '6'){playNote(notes[5],  play_length, rest_length); x = 132; light_panel();}
+    if (key == '7'){playNote(notes[6],  play_length, rest_length); x = 158; light_panel();}
+    if (key == '8'){playNote(notes[7],  play_length, rest_length); x = 185; light_panel();}
+    if (key == '9'){playNote(notes[8],  play_length, rest_length); x = 211; light_panel();}
+    if (key == 'a'){playNote(notes[9],  play_length, rest_length); x = 237; light_panel();}
+    if (key == 'b'){playNote(notes[10], play_length, rest_length); x = 264; light_panel();}
+    if (key == 'c'){playNote(notes[11], play_length, rest_length); x = 290; light_panel();}
+    if (key == 'd'){playNote(notes[12], play_length, rest_length); x = 317; light_panel();}
+    if (key == 'e'){playNote(notes[13], play_length, rest_length); x = 343; light_panel();}
+    if (key == 'f'){playNote(notes[14], play_length, rest_length); x = 369; light_panel();}
+    if (key == 'g'){playNote(notes[15], play_length, rest_length); x = 396; light_panel();}
+    if (key == 'h'){playNote(notes[16], play_length, rest_length); x = 422; light_panel();}
+    if (key == 'i'){playNote(notes[17], play_length, rest_length); x = 448; light_panel();}
+    if (key == 'j'){playNote(notes[18], play_length, rest_length); x = 475; light_panel();}
+    if (key == 'k'){playNote(notes[19], play_length, rest_length); x = 501; light_panel();}
+    if (key == 'l'){playNote(notes[20], play_length, rest_length); x = 528; light_panel();}
+    if (key == 'm'){playNote(notes[21], play_length, rest_length); x = 554; light_panel();}
+    if (key == 'n'){playNote(notes[22], play_length, rest_length); x = 580; light_panel();}
+    if (key == 'o'){playNote(notes[23], play_length, rest_length); x = 607; light_panel();}
+    if (key == 'p'){playNote(notes[24], play_length, rest_length); x = 633; light_panel();}
+    if (key == 'q'){playNote(notes[25], play_length, rest_length); x = 659; light_panel();}
+    if (key == 'r'){playNote(notes[26], play_length, rest_length); x = 686; light_panel();}
+    if (key == 's'){playNote(notes[27], play_length, rest_length); x = 712; light_panel();}
+    if (key == 't'){playNote(notes[28], play_length, rest_length); x = 739; light_panel();}
+    
+    //Serial.print("Key: "); Serial.println(key);
   }
 }
 
 //Function to play notes
 void playNote(int note, int duration, int rest) {
+  time_since = millis();
   digitalWrite(led, HIGH);
   tone(speaker, note, duration);
-  for(int x = 0; x < 4; x++) {
-    strip.setPixelColor(x, strip.Color(r,g,b));  //  Set pixel's color (in RAM)        
-  }
-  strip.show();  
   delay(rest);
   digitalWrite(led, LOW);
-    //delay(250);
-  for(int x = 0; x < 4; x++) {
-    strip.setPixelColor(x, strip.Color(0,0,0));
+
+}
+
+
+void light_panel(){
+  x += 1;
+  if (x > 765){x = 0;}  
+  if (r > 255){r = 0;}
+  if (g > 255){g = 0;}
+  if (b > 255){b = 0;}
+
+  if (x <= 255)          {r = 255 - x;          g =   0 + x;        b =   0;}
+  if (x  > 255 & x < 510){r =   0;              g = 255 - (x-255);  b =   0 + (x-255);}
+  if (x  > 510 & x < 765){r =   0 + (x - 510);  g = 0;              b = 255 - (x - 510);}
+  for(int y = 0; y < 4; y++) {
+    strip.setPixelColor(y, strip.Color(r,g,b));
   }
   strip.show();
-  
 }
