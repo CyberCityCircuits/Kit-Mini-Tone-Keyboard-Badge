@@ -6,8 +6,8 @@
 int play_length = 250;  //How long to play a note.
 int rest_length = 100;  //How long to rest between notes
 
-unsigned long time_since      =    0;  //How long since last note played.
-int           time_start_demo =  250;  //Wait to start color demo
+//unsigned long time_since      =    0;  //How long since last note played.
+//int           time_start_demo =  250;  //Wait to start color demo
 
 int wait = 100;  //General delay value
 
@@ -69,17 +69,16 @@ void setup() {
   pinMode(speaker, OUTPUT);
   pinMode(led,   OUTPUT);
 
-  strip.begin();  //Initisalze the RGB LEDs
+  strip.begin();  //Initialize the RGB LEDs
   strip.show();
   strip.setBrightness(brightness);
 }
 
 void loop() {
-  if ((millis()-time_since) > time_start_demo){
-    if (millis() % 50 == 0){
-      light_panel();
-    }
+if (millis() % 50 == 0){
+  light_panel();
   }
+  
   check_keyboard();
 
   //Serial.println(millis()-time_since);  
@@ -134,7 +133,7 @@ void check_keyboard(){
 
 //Function to play notes
 void playNote(int note, int duration, int rest) {
-  time_since = millis();
+  //time_since = millis();
   digitalWrite(led, HIGH);
   tone(speaker, note, duration);
   delay(rest);
