@@ -1,5 +1,5 @@
 # The Cyber City Circuits Mini Tone Keyboard
-https://www.tindie.com/products/cybercitycircuits/mini-tone-keyboard-badge
+https://shop.cybercitycircuits.com/products/mini-tone-keyboard-badge
 
 The Cyber City Circuits Mini Tone Keyboard is an Arduino compatible music keyboard with 2.5 octaves, a *luxurious* **ATMEGA328PB micro-controller**, a *beautiful* **CH-340G** USB interface, 4 *luminous* **WS2812E** RGB LEDs, a *standard* **on-board speaker**, and a *morphenomenal* **3.5mm jack adapter** so that you can connect it to your **existing sound systems/mixers**. The board is fully compatible with the Arduino IDE if you select 'Arduino Nano' in the 'Board Manager'.
 
