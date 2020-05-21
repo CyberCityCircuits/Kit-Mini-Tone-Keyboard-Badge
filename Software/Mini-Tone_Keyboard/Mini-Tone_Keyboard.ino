@@ -1,3 +1,7 @@
+//Cyber City Circuits Mini-Tone Keyboard
+//https://shop.cybercitycircuits.com/products/mini-tone-keyboard-badge
+//This is the software that is shipped with all new Mini-Tone Keyboards.
+
 #include "pitches.h"  //Use the user created library header for note values
 #include <Keypad.h>   //Import the 'keypad' library to use the buttom matrix
 #include <Adafruit_NeoPixel.h>
@@ -5,6 +9,8 @@
 
 int play_length = 250;  //How long to play a note.
 int rest_length = 100;  //How long to rest between notes
+
+int tuning = 0;  //Slightly change the value of notes, corrects speaker issues.
 
 //unsigned long time_since      =    0;  //How long since last note played.
 //int           time_start_demo =  250;  //Wait to start color demo
@@ -135,7 +141,7 @@ void check_keyboard(){
 void playNote(int note, int duration, int rest) {
   //time_since = millis();
   digitalWrite(led, HIGH);
-  tone(speaker, note, duration);
+  tone(speaker, note + tuning, duration);
   delay(rest);
   digitalWrite(led, LOW);
 
