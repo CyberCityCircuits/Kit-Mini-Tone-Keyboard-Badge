@@ -1,26 +1,27 @@
 #include "pitches.h"
 int speaker =  3;
 int led = 2;
-int wait = 500;
+int play = 250;
+int wait = 300;
 
 void setup() {
   pinMode(led, OUTPUT);
 }
 
 void loop() {
-  playNote(B5, 250, 300);
-  playNote(A5, 250, 300);
-  playNote(G5, 250, 300);
-  playNote(A5, 250, 300);
-  playNote(B5, 250, 300);
-  playNote(B5, 250, 300);
-  playNote(B5, 250, 300);
-  playNote(A5, 250, 300);
-  playNote(A5, 250, 300);
-  playNote(A5, 250, 300);
-  playNote(B5, 250, 300);
-  playNote(B5, 250, 300);
-  playNote(B5, 250, 300);
+  playNote(B5, play, wait);
+  playNote(A5, play, wait);
+  playNote(G5, play, wait);
+  playNote(A5, play, wait);
+  playNote(B5, play, wait);
+  playNote(B5, play, wait);
+  playNote(B5, play, wait);
+  playNote(A5, play, wait);
+  playNote(A5, play, wait);
+  playNote(A5, play, wait);
+  playNote(B5, play, wait);
+  playNote(B5, play, wait);
+  playNote(B5, play, wait);
 }
 
 void playNote(int note, int duration, int rest) {
